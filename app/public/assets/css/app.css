@@ -1,0 +1,65 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+body {
+    overflow: hidden;
+}
+
+.card {
+    width: 100px;
+    height: 140px;
+}
+
+.big-card {
+    width: 300px;
+    height: 420px;
+}
+
+.deck {
+    width: 200px;
+    height: 280px;
+}
+
+.oversized {
+    width: 280px !important;
+    height: 200px !important;
+}
+
+.plane {
+    width: 381px !important;
+    /* 254 */
+    height: 267px !important;
+    /* 178 */
+}
+
+.unselectable {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.gradient-loading {
+    background: linear-gradient(90deg,
+            rgba(180, 180, 180, 0.7) 25%,
+            rgba(220, 220, 220, 0.7) 50%,
+            rgba(180, 180, 180, 0.7) 75%);
+    background-size: 200% 100%;
+    animation: gradient-loading 1.5s infinite;
+    border-radius: 3.5%;
+}
+
+@keyframes gradient-loading {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.bl-btn {
+    @apply rounded-lg bg-blue-500 p-1 text-white
+}

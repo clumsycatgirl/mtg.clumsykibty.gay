@@ -1,0 +1,98 @@
+services:
+    nginx:
+        build:
+            context: ./
+            dockerfile: ./docker-compose/nginx/Dockerfile
+        container_name: mtgweb-nginx
+        restart: always
+        ports:
+            - 9001:80
+            - 9002:443
+        volumes:
+            - ./app:/var/www
+        depends_on:
+            - app
+        networks:
+            - mtgweb
+
+    app:
+        build:
+            context: ./
+            dockerfile: ./docker-compose/app/Dockerfile
+        container_name: mtgweb-app
+        restart: always
+        volumes:
+            - ./app:/var/www
+        links:
+            - db
+        depends_on:
+            - db
+            - redis
+        networks:
+            - mtgweb
+
+    ws:
+        build:
+            context: ./
+            dockerfile: ./docker-compose/ws/Dockerfile
+        container_name: mtgweb-ws
+        restart: always
+        ports:
+            - 9009:8008
+        volumes:
+            - ./app:/var/www
+        links:
+            - db
+        depends_on:
+            - db
+            - redis
+        networks:
+            - mtgweb
+
+    db:
+        build: ./docker-compose/db/
+        container_name: mtgweb-db
+        restart: always
+        volumes:
+            - ./docker-compose/db/data:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: mtg
+            MYSQL_USER: admin
+            MYSQL_PASSWORD: hatsunemikusaystransrights
+        networks:
+            - mtgweb
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:latest
+        container_name: mtgweb-phpmyadmin
+        ports:
+            - 8080:80
+        links:
+            - db
+        restart: always
+        environment:
+            PMA_HOST: db
+            PMA_USER: root
+            PMA_PASSWORD: root
+            MEMORY_LIMIT: 512M
+            UPLOAD_LIMIT: 40964564M
+        volumes:
+            - ./docker-compose/php/php.ini:/usr/local/etc/php/php.ini
+        networks:
+            - mtgweb
+
+    redis:
+        image: redis:alpine
+        container_name: mtgweb-redis
+        restart: always
+        volumes:
+            - ./docker-compose/redis/data:/data
+        ports:
+            - '6379:6379'
+        networks:
+            - mtgweb
+
+networks:
+    mtgweb:
+        driver: bridge

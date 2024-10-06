@@ -1,0 +1,8 @@
+
+[INFO] 2024-10-01 19:39:26: serving '/'
+		Uri: http://mtg.clumsykibty.gay/
+		Request-Method: 'GET'
+		Controller: 'App\Controllers\IndexController'
+		Controller-Method: 'index'
+		File: file:////var/www/app/controllers/IndexController.php
+[INFO] 2024-10-01 19:39:26: execution time: 920ms

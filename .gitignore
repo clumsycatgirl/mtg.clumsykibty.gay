@@ -1,0 +1,12 @@
+node_modules/
+
+app/lib/scripts/src/rs/target/
+app/lib/scripts/src/rs-lines/target/
+
+app/config/.enc-key
+
+docker-compose/db/data
+docker-compose/db/init/init.sql
+
+app/public/assets/cards.json
+
