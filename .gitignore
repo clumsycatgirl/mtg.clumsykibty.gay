@@ -9,4 +9,4 @@ docker-compose/db/data
 docker-compose/db/init/init.sql
 
 app/public/assets/cards.json
-
+app/app/.logs/
