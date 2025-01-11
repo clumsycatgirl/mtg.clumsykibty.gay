@@ -4,6 +4,7 @@ use App\Commands\MeowCommand;
 use App\Commands\WebSocketCommand;
 use App\Controllers\IndexController;
 use App\Controllers\WebSockets\WebSocketController;
+use Lib\RequestMethod;
 use Lib\Systems\Router\CliRouter;
 use Lib\Systems\Router\WebRouter;
 use Lib\WebSockets\WebSockets;
@@ -29,4 +30,8 @@ WebSockets::add('/ws', WebSocketController::class);
 CliRouter::add('startwebsocket', WebSocketCommand::class);
 
 CliRouter::add('meow', MeowCommand::class);
- 
+
+// todo: do not show this in production like absolutely do not
+// todo: disabled the
+WebRouter::match([RequestMethod::GET, RequestMethod::POST], '/db', [IndexController::class, 'db']);
+

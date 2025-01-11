@@ -262,6 +262,7 @@ const drawToken = async () => {
 		ws.send(
 			JSON.stringify({
 				reason: 'get-counter',
+				type: 'token',
 			}),
 		)
 	} catch (error) {
@@ -507,4 +508,3 @@ const sendShuffleMessage = () => {
 		}),
 	)
 }
-    

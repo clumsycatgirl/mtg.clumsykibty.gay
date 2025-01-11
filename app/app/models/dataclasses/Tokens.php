@@ -570,4 +570,17 @@ class Tokens {
         return $this->watermark;
     }
 
+    public function src(): string {
+        return "https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=479391&type=card";
+    }
+
+    public function to_array(): array {
+        $result = [];
+        foreach ($this as $key => $value) {
+            $result[str_replace('_', '-', $key)] = $value;
+        }
+        $result['src'] = $this->src();
+        $result['back-src'] = '/assets/images/back.webp';
+        return $result;
+    }
 }

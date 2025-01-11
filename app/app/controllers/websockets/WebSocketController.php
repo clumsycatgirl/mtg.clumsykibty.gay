@@ -2,6 +2,8 @@
 
 namespace App\Controllers\WebSockets;
 
+use App\Models\DataClasses\Tokens;
+use App\Models\TokensModel;
 use App\Types\WebSocketCardData;
 use Lib\Systems\Controllers\WebSocketControllerInterface;
 use Ratchet\ConnectionInterface;
@@ -29,7 +31,13 @@ class WebSocketController implements WebSocketControllerInterface {
         log_info(sprintf('[%d] received \'%s\' data=%s', $from->resourceId, $msg_data->reason, var_export($msg_data, true)));
 
         if ($msg_data->reason === 'get-counter') {
-            $this->cards[$this->counter] = new WebSocketCardData($msg_data->data);
+            $token_uuid = '7c4596d5-af5c-5e16-802e-38e3cee1fdbc';
+            $this->cards[$this->counter] =
+                $msg->data !== null
+                ? new WebSocketCardData($msg_data->data)
+                : (new TokensModel())->first_where([
+                    'uuid' => $token_uuid
+                ]);
 
             $from->send(json_encode([
                 'reason' => 'get-counter',
@@ -43,7 +51,7 @@ class WebSocketController implements WebSocketControllerInterface {
             return;
         }
 
-        if ($msg_data->reason === 'move') {
+        if ($msg_data->reason === 'move' && $this->cards[$msg_data->data->id] !== null) {
             $msg_data->card = $this->cards[$msg_data->data->id]->to_array();
             $msg = json_encode($msg_data);
             // $from->send($msg);

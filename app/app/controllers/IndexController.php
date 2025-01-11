@@ -347,4 +347,8 @@ class IndexController extends Controller {
 
         $this->session->set('deck', $deck);
     }
+
+    public function db() {
+        return $this->view('db');
+    }
 }

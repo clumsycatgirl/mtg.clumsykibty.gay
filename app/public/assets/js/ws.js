@@ -1,48 +1,55 @@
 const wsPort = 9009
-const ws = new WebSocket(`ws://mtg-ws.clumsykibty.gay/ws`)
+let ws
+setupWs()
 
-ws.onopen = (...params) => {
-	console.log('connected to ws server')
-	console.log(...params)
-}
+function setupWs() {
+	ws = new WebSocket(`ws://mtg-ws.clumsykibty.gay/ws`)
+	ws.onopen = (...params) => {
+		console.log('connected to ws server')
+		console.log(...params)
+	}
 
-ws.onerror = console.error
+	ws.onclose = ws.onerror = (error) => {
+		console.error(error)
+		// setupWs()
+	}
 
-ws.onmessage = (event) => {
-	const data = JSON.parse(event.data)
+	ws.onmessage = (event) => {
+		const data = JSON.parse(event.data)
 
-	switch (data.reason) {
-		case 'chat':
-			appendMessage(data.data)
-			break
-		case 'health':
-			updateOpponentHealth(data.data)
-			break
-		case 'move':
-			move(data)
-			break
-		case 'draw':
-			draw(data)
-			break
-		case 'get-counter':
-			$('#hand').children().last().attr('id', data.data.counter)
-			ws.send(
-				JSON.stringify({
-					reason: 'draw',
-					element: getDataToSendFromElement($('#hand').children().last()[0]),
-				}),
-			)
-			waitingForCounter = false
-			break
-		case 'tap':
-			$(`#${data.data.id}`).css('transform', `rotate(${data.data.tapped ? '-90' : '180'}deg)`)
-			break
-		case 'text-bubble':
-			const $bubble = addTextBubble($(`#${data.data.id} img`), data.data.text)
-			$bubble.css('transform', 'rotate(180deg)')
-			break
-		default:
-			break
+		switch (data.reason) {
+			case 'chat':
+				appendMessage(data.data)
+				break
+			case 'health':
+				updateOpponentHealth(data.data)
+				break
+			case 'move':
+				move(data)
+				break
+			case 'draw':
+				draw(data)
+				break
+			case 'get-counter':
+				$('#hand').children().last().attr('id', data.data.counter)
+				ws.send(
+					JSON.stringify({
+						reason: 'draw',
+						element: getDataToSendFromElement($('#hand').children().last()[0]),
+					}),
+				)
+				waitingForCounter = false
+				break
+			case 'tap':
+				$(`#${data.data.id}`).css('transform', `rotate(${data.data.tapped ? '-90' : '180'}deg)`)
+				break
+			case 'text-bubble':
+				const $bubble = addTextBubble($(`#${data.data.id} img`), data.data.text)
+				$bubble.css('transform', 'rotate(180deg)')
+				break
+			default:
+				break
+		}
 	}
 }
 
